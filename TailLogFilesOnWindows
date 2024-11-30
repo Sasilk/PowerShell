@@ -1,0 +1,5 @@
+- To tail a log file on Windows, use “Get-Content -Wait” PowerShell command
+
+- If you need to grep for a specific record pipe with “Select-String”. Example command below;
+
+PS C:\Logs> Get-Content -Wait .\DNS.log | Select-String -Pattern '192.168.5.16'
