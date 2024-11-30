@@ -2,58 +2,43 @@ Restore a deleted OneDrive using PowerShell
 
 If you need to restore a deleted OneDrive if the user is deleted earlier than your SharePoint retention period — ie. if the user no longer appears in the ‘Deleted users’ tab in the Microsoft 365 admin center, you can still restore it using PowerShell. Follow the steps below and enjoy being called a ‘PowerShell Queen’ :)
 
-Download SharePoint Online Management Shell from the link below.
-https://www.microsoft.com/en-us/download/details.aspx?id=35588
+- Download SharePoint Online Management Shell from the link below.
+  https://www.microsoft.com/en-us/download/details.aspx?id=35588
 
-Find it from your Start menu and run
-It will ask you to sign in. Use/select your own account (need to have admin roles)
-Connect SharePoint Online Service by running below command
-Connect-SPOService -Url https://[your-sharepoint-tenant-prefix]-admin.sharepoint.com
+- Find it from your Start menu and run
+  It will ask you to sign in. Use/select your own account (need to have admin roles)
 
-Example:
+- Connect SharePoint Online Service by running below command
+  Connect-SPOService -Url https://[your-sharepoint-tenant-prefix]-admin.sharepoint.com
+  Example:
+  Connect-SPOService -Url https://mytenant-admin.sharepoint.com
 
-Connect-SPOService -Url https://mytenant-admin.sharepoint.com
+- Define deleted user’s OneDrive folder path. Use below as a reference, just replace name and surname with your user’s name and surname.
+  User Name: name.surname
+  OneDrive folder: https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+  Example:
+  https://mytenant-my.sharepoint.com/personal/name_surname_mydomain_co_uk
 
-Define deleted user’s OneDrive folder path. Use below as a reference, just replace name and surname with your user’s name and surname.
-User Name: name.surname
+- Run the following command to determine if the OneDrive is available for restore. If the user’s OneDrive appears in the results, it can be restored.
+  Get-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+  Example:
+  Get-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
+ 
+- Restore the OneDrive to an active state
+  Restore-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+  Example:
+  Restore-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
 
-OneDrive folder: https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+- Assign yourself (admin) to OneDrive to access the needed data
+  Set-SPOUser -Site https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain] -LoginName AdminUserName@[YourDomain] -IsSiteCollectionAdmin $True
+  Example:
+  Restore-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk -LoginName sevcan.asilkan@mydomain.co.uk -IsSiteCollectionAdmin $True
 
-Example:
+- You can now recover data in deleted user’s OneDrive. Basically, just download the files.
 
-https://mytenant-my.sharepoint.com/personal/name_surname_mydomain_co_uk
-
-Run the following command to determine if the OneDrive is available for restore
-Get-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
-
-Example:
-
-Get-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
-
-If the user’s OneDrive appears in the results, it can be restored.
-
-Restore the OneDrive to an active state
-Restore-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
-
-Example:
-
-Restore-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
-
-Assign yourself (admin) to OneDrive to access the needed data
-Set-SPOUser -Site https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain] -LoginName AdminUserName@[YourDomain] -IsSiteCollectionAdmin $True
-
-Example:
-
-Restore-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk -LoginName sevcan.asilkan@mydomain.co.uk -IsSiteCollectionAdmin $True
-
-You can now recover data in deleted user’s OneDrive. Basically, just download the files.
-After you recover the data you need from the OneDrive, permanently delete the OneDrive by running the following two commands.
-Remove-SPOSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
-
-Remove-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
-
-Example:
-
-Remove-SPOSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
-
-Remove-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
+- After you recover the data you need from the OneDrive, permanently delete the OneDrive by running the following two commands.
+  Remove-SPOSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+  Remove-SPODeletedSite -Identity https://[your-sharepoint-tenant-prefix]-my.sharepoint.com/personal/name_surname_[your_domain]
+  Example:
+  Remove-SPOSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
+  Remove-SPODeletedSite -Identity https://mytenant- my.sharepoint.com/personal/name_surname_mydomain_co_uk
