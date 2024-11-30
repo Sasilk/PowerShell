@@ -1,0 +1,14 @@
+• Connect EXO
+Connect-ExchangeOnline -UserPrincipalName sevcan.asilkan@mydomain.co.uk
+
+• List all deleted mailboxes
+Get-Mailbox -InactiveMailboxOnly | FL Name,DistinguishedName,ExchangeGuid,PrimarySmtpAddress
+
+• Identify the user name or mailbox name you need to restore. Make a note of its ExchangeGuid such as 41673988-39cc-4278-86f2-384cf742d401
+
+• Create a shared mailbox as you will use it to restore deleted user's mailbox. Give it a name such as NameSurname_HistoricalEmails
+New-Mailbox -Shared -Name 'NameSurname_HistoricalEmails' -DisplayName 'UserNameSure Historical Emails'
+
+• Restore emails from deleted mailbox to the new shared mailbox
+New-MailboxRestoreRequest -SourceMailbox 41673988-39cc-4278-86f2-384cf742d401 -TargetMailbox NameSurname_HistoricalEmails@mydomain.co.uk -AllowLegacyDNMismatch
+
