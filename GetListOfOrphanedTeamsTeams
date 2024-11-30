@@ -1,0 +1,2 @@
+Connect-ExchangeOnline 
+Get-UnifiedGroup | Where-Object {-Not $_.ManagedBy}  
