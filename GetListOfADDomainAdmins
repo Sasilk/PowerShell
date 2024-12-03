@@ -9,12 +9,14 @@ Get-ADGroupMember -Identity $GroupName -Recursive | Where-Object { $_.objectClas
     }, @{
         Name = 'FullName'; Expression = {$_.DisplayName}
     }, @{
-        Name = 'OU'; Expression = {
+        Name = 'OUName'; Expression = {
             # Extract the Organizational Unit (OU) part from the DistinguishedName
             ($_.DistinguishedName -split ',OU=')[1..($_.DistinguishedName.Count)] -join ',OU='
         }
-    }, @{
-        Name = 'Status'; Expression = {
+    },@{
+        Name = 'OUFullPath'; Expression = {$_.DistinguishedName}
+    },@{
+        Name = 'AccountStatus'; Expression = {
             # Check if the account is enabled or disabled
             if ($_.Enabled -eq $true) { "Enabled" } else { "Disabled" }
         }
