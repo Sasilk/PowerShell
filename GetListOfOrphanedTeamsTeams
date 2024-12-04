@@ -1,2 +1,0 @@
-Connect-ExchangeOnline -UserPrincipalName sevcan.asilkan@mydomain.co.uk
-Get-UnifiedGroup | Where-Object {-Not $_.ManagedBy}  
