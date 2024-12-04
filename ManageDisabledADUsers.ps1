@@ -5,15 +5,15 @@ $Users = Get-ADUser -filter {Enabled -eq $false } | Select DistinguishedName, Sa
  
  ForEach ($User In $Users){
 
-  # Moving user to the DisabledAccountsOU
+  # Move user to the DisabledAccountsOU
    Move-ADObject -Identity $User.DistinguishedName -TargetPath $moveToOU
   
-   #Getting group membership of the user
+   #Get group membership of the user
    $ExistingGroups = Get-ADPrincipalGroupMembership $User.SamAccountName | Select-Object name
   
    ForEach ($Group In $ExistingGroups){
         
-    # Removing user from all groups  
+    # Remove user from all groups  
     Remove-ADGroupMember -Identity $Group.name -Members $User.SamAccountName -Confirm:$false
    
     }
