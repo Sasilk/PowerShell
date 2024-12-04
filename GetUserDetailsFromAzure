@@ -46,7 +46,7 @@ foreach ($mailbox in $mailboxes) {
     }
 }
 # Define the file path for the CSV export. Change it for your path and if you use Windows machine make sure you put \ instead of \ as mine is a Linux path
-$FilePath = "/home/sasil/SEVCAN/WTCC/EnabledUserAccounts.csv"
+$FilePath = "/home/sasil/SEVCAN/WTCC/AzureUserAccountDetails.csv"
 
 # Export the mailbox details to a CSV file
 $mailboxDetails | Export-Csv -Path $FilePath -NoTypeInformation -Encoding UTF8
