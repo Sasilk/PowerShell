@@ -1,6 +1,7 @@
-﻿# Install-Module -Name AzureAD
-# Install-Module -Name ImportExcel (optional for Excel reading)
+#Script to add a list of users (in a .csv) to a cloud security group in Azure
 
+# Install-Module -Name AzureAD
+# Install-Module -Name ImportExcel (optional for Excel reading)
 #Import-Module AzureAD
 
 Connect-AzureAD
@@ -14,30 +15,23 @@ if (-not (Test-Path -Path $CSVFilePath)) {
     Write-Error "The specified CSV file does not exist. Please check the file path."
     exit
 }
-
 $UserList = Import-Csv -Path $CSVFilePath
-
 if (-not $UserList) {
     Write-Error "The CSV file is empty or could not be read. Please check the file path and format."
     exit
 }
-
 $Group = Get-AzureADGroup -Filter "displayName eq '$GroupName'"
 if (-not $Group) {
     Write-Error "Group '$GroupName' not found in Azure AD."
     exit
 }
-
 foreach ($User in $UserList) {
     $UserPrincipalName = $User.UserPrincipalName
-
     if (-not $UserPrincipalName) {
         Write-Warning "A row in the CSV file is missing the 'UserPrincipalName' value. Skipping."
         continue
     }
-
     $AzureADUser = Get-AzureADUser -Filter "UserPrincipalName eq '$UserPrincipalName'"
-
     if ($AzureADUser) {
         # Add the user to the group
         try {
