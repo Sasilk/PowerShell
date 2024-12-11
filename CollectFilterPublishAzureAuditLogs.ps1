@@ -1,13 +1,15 @@
+# Script to display audit logs showing activities in the last 24 hrs in a webpage
+# Can edit the script for your requirements
+# Mine does filter the logs for the admin accounts (the ones prefixed with 'adm-') using a KQL search, creates an HTML file. You can publishs this HTML file on your webserver
+
 function Get-UserPrincipalName {
     param (
         [Parameter(Mandatory=$true)]
         [string]$String
     )
-
     $start_index = $String.IndexOf('"userPrincipalName":"') + ('"userPrincipalName":"').Length
     $end_index = $String.IndexOf('"', $start_index)
     $user_principal_name = $String.Substring($start_index, $end_index - $start_index)
-
     return $user_principal_name
 }
 
@@ -27,7 +29,6 @@ function Get-UserPrincipalNameAndGroupDisplayName {
     $result = "User: $user_principal_name  /  Group: $group_display_name"
     return $result
 }
-
 
 $DST = Get-Date -Format "dddd dd/MM/yyyy hh:mm"
 
@@ -95,9 +96,8 @@ $htmlContent = @"
 "@
 $htmlContent += "<h3>Azure Admins' Audit Logs</h3>"
 
-
 $logFile = "C:\Scripts\AzureAuditLogs\LogFile.csv"
-$htmlFile = "C:\Program Files (x86)\Lansweeper\Website\AuditLogs.html"
+$htmlFile = "C:\Program Files (x86)\MyWebServer\Website\AuditLogs.html"
 
 # Use the encrypted file for the credential
 # $credentials = Import-Clixml -Path C:\Scripts\AzureAuditLogs\creds.xml
@@ -115,7 +115,7 @@ Connect-AzAccount #-Credential sevcan.asilkan@mydomain.co.uk
 Connect-AzAccount -ApplicationId 456f61be-3ca0-4ad5-a1ad-638e0d5d41a0 -TenantId 55687bf5-4348-4b9e-aac5-560b8ebadbb5 -CertificateThumbprint 1D12C5EF50F8C305373EC7CC53F2AF4F2692A560
 
 #
-$workspace = Get-AzoperationalInsightsWorkspace -Name DefaultWorkspace-be12cre9-9d1b-4299-bb67-c811af35fa37-EUS -ResourceGroupName DefaultResourceGroup-EUS
+$workspace = Get-AzoperationalInsightsWorkspace -Name DefaultWorkspace-be12cre9-9d1b-4399-bb67-c811ad3efa37-EUS -ResourceGroupName DefaultResourceGroup-EUS
 $resourceGroup = "DefaultResourceGroup-EUS"
 $query = @"
 AuditLogs 
@@ -126,7 +126,6 @@ AuditLogs
 
 # Run the query and get the results
 $auditLogs = $(Invoke-AzOperationalInsightsQuery -WorkspaceId $workspace.CustomerId -Query $query).Results
-
 
 If ($auditLogs -ne "") {
     # Export the logs to a CSV
