@@ -5,10 +5,10 @@
 
 Connect-AzureAD
 
-$GroupName = 'MFA Test Group'
+$GroupName = 'Test Group'
 
 # Path to the file containing user accounts. Make sure the CSV file has a column named 'UserPrincipalName' for the users' emails
-$CSVFilePath = "C:\temp\MFA Exclusions.csv"
+$CSVFilePath = "C:\temp\UserList.csv"
 
 if (-not (Test-Path -Path $CSVFilePath)) {
     Write-Error "The specified CSV file does not exist. Please check the file path."
